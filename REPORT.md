@@ -45,25 +45,9 @@ PDF -> matn qatlami bormi?
 
 ## 4. Baholash natijalari
 
-`python evaluate.py` natijasi (`results/eval.md`). Ground truth 6 ta matnli PDF'dan qo'lda tayyorlangan,
-tasdiqlangan, skan uchun ham o'sha ishlatiladi.
-
-| Hujjat | Manba | CER | Rekvizit | Precision | Recall | F1 | Ijrochi | Muddat | Muddat matni |
-|---|---|---|---|---|---|---|---|---|---|
-| NAMUNA_1_abzats | matnli | - | 5/5 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| NAMUNA_2_jadval | matnli | - | 5/5 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| NAMUNA_3_ilova | matnli | - | 5/5 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| xat_1_abzatsdagi_topshiriqlar | matnli | - | 7/7 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| xat_2_jadvaldagi_topshiriqlar | matnli | - | 7/7 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| xat_3_ilovadagi_topshiriqlar | matnli | - | 7/7 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| **JAMI (matnli)** | matnli | - | 36/36 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| NAMUNA_1_abzats | skaner | 0.081 | 5/5 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| NAMUNA_2_jadval | skaner | 0.007 | 5/5 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| NAMUNA_3_ilova | skaner | 0.072 | 5/5 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| xat_1_abzatsdagi_topshiriqlar | skaner | 0.045 | 7/7 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| xat_2_jadvaldagi_topshiriqlar | skaner | 0.041 | 7/7 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| xat_3_ilovadagi_topshiriqlar | skaner | 0.038 | 7/7 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
-| **JAMI (skaner)** | skaner | 0.047 | 36/36 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 | 1.00 |
+Raqamlar jadvali (rekvizit, precision/recall/F1, ijrochi, muddat, CER; matnli va skan alohida) **README.md** ning
+"Natijalar" bo'limida. Ground truth 6 ta matnli PDF'dan qo'lda tayyorlangan va tasdiqlangan, skan uchun ham o'sha
+ishlatiladi. Quyida shu natijalarni qanday o'qish kerakligi.
 
 **Bu natijani qanday o'qish kerak (muhim).** 1.00 umumlashuv isboti emas:
 
@@ -130,13 +114,42 @@ chegara qayerdaligi aniqlanmagan.
 1. **Ko'rilmagan hujjatlarda baholash:** 30-50 ta real hujjat va mustaqil ground truth; qoidalarni shunga qarab sozlash.
 2. **PaddleOCR / PP-Structure:** jadval tuzilishi va sifatsiz skanlarda Tesseract'dan kuchliroq bo'lishi kutiladi;
    `ocr.py` ni almashtirish kifoya.
-3. **GPU'da VLM ikkinchi tekshiruvchi sifatida:** qoidalar natijasini tasdiqlaydi yoki ishonchi past maydonlarni
-   qayta o'qiydi (raqam va sana qoida yo'lidan olinadi, VLM faqat solishtiradi).
+3. **GPU'da VLM ikkinchi tekshiruvchi sifatida:** 8-bo'limdagi reja bo'yicha.
 4. **LLM abzats ijrochisini ajratish uchun:** tashkiliy birlik so'zlari ro'yxatiga bog'liqlikni yo'qotadi.
 5. **Foydalanuvchi tuzatishlaridan o'rganish:** UI'da tuzatish tugmasi, tuzatilgan natijalardan yangi ground truth
    va qoidalar uchun regressiya testlari.
 6. Rasm sifatini oldindan tekshirish (DPI, shovqin, jadval topilmadi) va foydalanuvchiga ogohlantirish berish.
 
-## 8. VLM tajribasi
+## 8. Nega VLM hozir ishlatilmadi (va qachon qo'shiladi)
+
+VLM (rasmni to'g'ridan-to'g'ri o'qiydigan model) bu bosqichda ongli ravishda ishlatilmadi:
+
+1. **Resurs.** Ish muhiti CPU, 16 GB RAM, diskda joy kam. Foydali VLM'lar GPU'da ishlaydi; CPU'da bir sahifa
+   daqiqalar oladi, veb-interfeysda foydalanuvchi shuncha kutmaydi.
+2. **Aniqlik xavfi.** VLM o'qiy olmagan joyini "o'ylab topishi" mumkin: sana, raqam yoki ijrochini aytilmagan
+   qiymat bilan to'ldiradi. Huquqiy hujjatda bunday xato topshiriq muddatini o'zgartiradi va uni topish qiyin.
+3. **Tushuntirib bo'lmaydi.** Qoida yo'lida har maydon qaysi regex yoki qoidadan chiqqani ko'rinadi, xatoni
+   tuzatish mumkin. VLM'da xatoning sababi noma'lum.
+4. **Kerak emas edi.** Berilgan skanlarda Tesseract va qoidalar 12 ta hujjatning hammasida ground truth bilan
+   mos keldi (README'dagi jadval), ya'ni VLM yechadigan muammo shu to'plamda ko'rinmadi.
+5. **Cheklov.** Hujjatlar tashqi bulutga yuborilmasligi shart; bu faqat lokal modelni qoldiradi, u esa 1-bandga
+   qaytadi.
+
+**Bu degani VLM kerak emas degani emas.** Sifatsiz skanda (5-bo'lim) tizim sinadi, qoidalar esa buzilgan OCR matnini
+tuzata olmaydi. Aynan shu joyda VLM foyda berishi kutiladi (bu hozircha faraz, sinalmagan).
+
+**Keyingi bosqich rejasi (GPU mavjud bo'lganda):**
+
+1. VLM qoida yo'lini almashtirmaydi, **ikkinchi tekshiruvchi** bo'ladi: qoidalar natijasini beradi, VLM
+   sahifa rasmidan o'sha maydonlarni mustaqil o'qiydi.
+2. Ikkalasi mos kelsa, natija tasdiqlanadi. Mos kelmasa yoki OCR ishonchi past bo'lsa, maydon UI'da sariq
+   "tekshiring" belgisi bilan chiqadi (shu mexanizm hozir ham bor).
+3. Sana va raqamlarning yakuniy qiymati doim qoida yo'lidan olinadi, VLM faqat solishtirish uchun.
+4. Baholash: avval 5-bo'limdagi sifatsiz skanlar to'plamida, keyin real hujjatlarda; metrika: qoida yo'li bilan
+   solishtirganda qo'shimcha to'g'ri topilgan va noto'g'ri tasdiqlangan maydonlar soni, bir sahifa vaqti.
+
+Bu eksperiment natijalari alohida bo'limda yoziladi.
+
+## 9. VLM tajribasi
 
 [natija kutilmoqda]

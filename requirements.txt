@@ -6,4 +6,3 @@ opencv-python-headless
 numpy
 pytesseract
 rapidfuzz
-pytest

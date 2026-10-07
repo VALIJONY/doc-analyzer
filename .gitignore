@@ -1,3 +1,7 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+# lokal: testlar va baholash natijalari repoga kiritilmaydi
+tests/
+pytest.ini
+results/
