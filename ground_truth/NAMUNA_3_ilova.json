@@ -1,0 +1,90 @@
+{
+  "file": "NAMUNA_3_ilova.pdf",
+  "doc_type": "qaror",
+  "requisites": {
+    "sender": "NOTARIAT VA FHDYO FAOLIYATINI MUVOFIQLASHTIRISH KENGASHINING",
+    "number": "160",
+    "date": "2026-03-05",
+    "date_raw": "2026-yil 5-mart",
+    "signer_position": "Kengash raisi",
+    "signer_name": "G. Nazarova",
+    "recipient": null,
+    "prepared_by": null
+  },
+  "tasks": [
+    {
+      "n": "3",
+      "text": "Kengash kotibiyati ilova ijrosi to'g'risida har chorakda Kengash yig'ilishiga axborot kiritib borsin.",
+      "executor": "Kengash kotibiyati",
+      "co_executors": [],
+      "deadline_raw": "har chorakda",
+      "deadline_type": "periodic",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "paragraph"
+    },
+    {
+      "n": "1",
+      "text": "Notariat harakatlarini elektron qayd etish modulini joriy etish",
+      "executor": "Notariat boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "2026-yil 1-iyun",
+      "deadline_type": "date",
+      "deadline_date": "2026-06-01",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "2",
+      "text": "FHDYo yozuvlarini raqamli arxivga o'tkazish",
+      "executor": "FHDYo boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "2026-yil 1-avgust",
+      "deadline_type": "date",
+      "deadline_date": "2026-08-01",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "3",
+      "text": "Elektron hujjatlarni tizimlararo almashish integratsiyasini ta'minlash",
+      "executor": "Axborot texnologiyalari boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "texnik topshiriq tasdiqlangandan so'ng 3 oy ichida",
+      "deadline_type": "conditional",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "4",
+      "text": "Hududiy bo'linmalar xodimlarini yangi tizimda ishlashga o'qitish",
+      "executor": "Kadrlar boshqarmasi",
+      "co_executors": [
+        "hududiy bo'linmalar"
+      ],
+      "deadline_raw": "2026-yil 15-may",
+      "deadline_type": "date",
+      "deadline_date": "2026-05-15",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "5",
+      "text": "Fuqarolar uchun qo'llanma va axborot materiallarini tayyorlash",
+      "executor": "Axborot xizmati",
+      "co_executors": [],
+      "deadline_raw": "bir oy muddatda",
+      "deadline_type": "relative",
+      "deadline_date": "2026-04-05",
+      "computed": true,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    }
+  ]
+}

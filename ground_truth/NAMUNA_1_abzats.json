@@ -1,0 +1,78 @@
+{
+  "file": "NAMUNA_1_abzats.pdf",
+  "doc_type": "qaror",
+  "requisites": {
+    "sender": "HUQUQIY XIZMATLARNI RAQAMLASHTIRISH MILLIY AGENTLIGI KENGASHINING",
+    "number": "121",
+    "date": "2026-02-10",
+    "date_raw": "2026-yil 10-fevral",
+    "signer_position": "Kengash raisi",
+    "signer_name": "M. Tursunov",
+    "recipient": null,
+    "prepared_by": null
+  },
+  "tasks": [
+    {
+      "n": "1",
+      "text": "Ro'yxatga olish departamenti yuridik shaxslarni ro'yxatdan o'tkazish tartibini soddalashtirishni nazarda tutuvchi hujjat loyihasini bir oy muddatda ishlab chiqsin va Kengash muhokamasiga kiritsin.",
+      "executor": "Ro'yxatga olish departamenti",
+      "co_executors": [],
+      "deadline_raw": "bir oy muddatda",
+      "deadline_type": "relative",
+      "deadline_date": "2026-03-10",
+      "computed": true,
+      "deadline_source": "explicit",
+      "location": "paragraph"
+    },
+    {
+      "n": "2",
+      "text": "Axborot texnologiyalari boshqarmasi Ro'yxatga olish departamenti bilan birgalikda ro'yxatdan o'tkazish axborot tizimining yagona interaktiv davlat xizmatlari portali bilan integratsiyasini 2026-yil 1-iyulga qadar ta'minlasin.",
+      "executor": "Axborot texnologiyalari boshqarmasi",
+      "co_executors": [
+        "Ro'yxatga olish departamenti"
+      ],
+      "deadline_raw": "2026-yil 1-iyulga qadar",
+      "deadline_type": "date",
+      "deadline_date": "2026-07-01",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "paragraph"
+    },
+    {
+      "n": "3",
+      "text": "Huquqiy ekspertiza boshqarmasi ro'yxatdan o'tkazishda taqdim etiladigan hujjatlarni avtomatik tekshirish modulini joriy etish yuzasidan takliflar tayyorlasin.",
+      "executor": "Huquqiy ekspertiza boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "bir oy muddatda",
+      "deadline_type": "relative",
+      "deadline_date": "2026-03-10",
+      "computed": true,
+      "deadline_source": "default_rule",
+      "location": "paragraph"
+    },
+    {
+      "n": "4",
+      "text": "Hududiy bo'linmalar yangi tartib bo'yicha amaliy qo'llanmani tarqatish va aholiga tushuntirish ishlarini 2026-yil 15-martdan boshlab tashkil etsin.",
+      "executor": "Hududiy bo'linmalar",
+      "co_executors": [],
+      "deadline_raw": "2026-yil 15-martdan boshlab",
+      "deadline_type": "start",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "none",
+      "location": "paragraph"
+    },
+    {
+      "n": "5",
+      "text": "Ro'yxatga olish departamenti mazkur qaror ijrosi to'g'risida har oyda Kengashga ma'lumot berib borsin.",
+      "executor": "Ro'yxatga olish departamenti",
+      "co_executors": [],
+      "deadline_raw": "har oyda",
+      "deadline_type": "periodic",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "paragraph"
+    }
+  ]
+}

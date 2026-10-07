@@ -1,0 +1,90 @@
+{
+  "file": "NAMUNA_2_jadval.pdf",
+  "doc_type": "qaror",
+  "requisites": {
+    "sender": "YURIDIK XIZMATLAR SIFATINI OSHIRISH RESPUBLIKA KOMISSIYASINING",
+    "number": "145",
+    "date": "2026-02-24",
+    "date_raw": "2026-yil 24-fevral",
+    "signer_position": "Komissiya raisi",
+    "signer_name": "O. Saidov",
+    "recipient": null,
+    "prepared_by": null
+  },
+  "tasks": [
+    {
+      "n": "2",
+      "text": "Axborot texnologiyalari boshqarmasi yuqoridagi topshiriqlar ijrosi to'g'risida har chorak yakunidan keyingi oyning 10-sanasiga qadar Komissiyaga axborot kiritsin.",
+      "executor": "Axborot texnologiyalari boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "har chorak yakunidan keyingi oyning 10-sanasiga qadar",
+      "deadline_type": "periodic",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "paragraph"
+    },
+    {
+      "n": "1",
+      "text": "Murojaatlarni avtomatik tasniflash modulini joriy etish",
+      "executor": "Axborot texnologiyalari boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "2026-yil 1-may",
+      "deadline_type": "date",
+      "deadline_date": "2026-05-01",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "2",
+      "text": "Elektron yuridik maslahat chatbotini ishga tushirish",
+      "executor": "Axborot texnologiyalari boshqarmasi",
+      "co_executors": [
+        "Yuridik xizmat ko'rsatish boshqarmasi"
+      ],
+      "deadline_raw": "2026-yil 15-iyun",
+      "deadline_type": "date",
+      "deadline_date": "2026-06-15",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "3",
+      "text": "Topshiriqlarni avtomatik taqsimlash tizimini sinovdan o'tkazish",
+      "executor": "Ish yuritish (devonxona) bo'limi",
+      "co_executors": [],
+      "deadline_raw": "tizim tayyor bo'lgandan so'ng 2 oy ichida",
+      "deadline_type": "conditional",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "4",
+      "text": "Xodimlar uchun o'quv seminarlarini tashkil etish",
+      "executor": "Kadrlar boshqarmasi",
+      "co_executors": [],
+      "deadline_raw": "har chorakda",
+      "deadline_type": "periodic",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "5",
+      "text": "Ma'lumotlar xavfsizligi talablariga muvofiqlikni ta'minlash",
+      "executor": "Axborot xavfsizligi bo'linmasi",
+      "co_executors": [],
+      "deadline_raw": "2026-yil 20-aprel",
+      "deadline_type": "date",
+      "deadline_date": "2026-04-20",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    }
+  ]
+}

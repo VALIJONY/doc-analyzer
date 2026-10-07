@@ -1,0 +1,102 @@
+{
+  "file": "xat_2_jadvaldagi_topshiriqlar.pdf",
+  "doc_type": "xat",
+  "requisites": {
+    "sender": "\"YANGI AVLOD RAQAMLI YECHIMLAR\" DAVLAT UNITAR KORXONASI",
+    "number": "15/2-784",
+    "date": "2026-09-11",
+    "date_raw": "11.09.2026",
+    "signer_position": "Bosh direktor",
+    "signer_name": "A. Yusupov",
+    "recipient": "Adliya organlari va muassasalarida axborot texnologiyalarini rivojlantirish markaziga",
+    "prepared_by": "M. Karimova"
+  },
+  "tasks": [
+    {
+      "n": null,
+      "text": "Bajarilgan ishlar bo'yicha umumlashtirilgan ma'lumot loyiha koordinatori orqali Korxonaning Raqamli loyihalar boshqarmasiga taqdim etilsin.",
+      "executor": "Markaz",
+      "co_executors": [],
+      "deadline_raw": "",
+      "deadline_type": "none",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "none",
+      "location": "paragraph"
+    },
+    {
+      "n": "1",
+      "text": "Murojaatlar portalidagi mavjud klassifikatorlarni inventarizatsiya qilish va ularni takomillashtirish bo'yicha taklif tayyorlash",
+      "executor": "Tizim tahlili bo'limi",
+      "co_executors": [],
+      "deadline_raw": "18.09.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-09-18",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "2",
+      "text": "Hujjatlardan topshiriq, muddat va ijrochi haqidagi ma'lumotlarni avtomatik ajratish bo'yicha prototip ishlab chiqish",
+      "executor": "Sun'iy intellekt laboratoriyasi",
+      "co_executors": [],
+      "deadline_raw": "30.09.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-09-30",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "3",
+      "text": "Topshiriqlarni tarkibiy bo'linmalarga yo'naltirish uchun vakolatlar va tashkiliy tuzilma ma'lumotlarini shakllantirish",
+      "executor": "Biznes-tahlil bo'limi",
+      "co_executors": [
+        "Kadrlar bo'limi"
+      ],
+      "deadline_raw": "2026-yil 5-oktabr",
+      "deadline_type": "date",
+      "deadline_date": "2026-10-05",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "4",
+      "text": "AI modullarining mavjud axborot tizimlari bilan integratsiyasi bo'yicha texnik talablarni tayyorlash",
+      "executor": "Integratsiya bo'limi",
+      "co_executors": [],
+      "deadline_raw": "prototip tayyor bo'lgandan so'ng 15 kun ichida",
+      "deadline_type": "conditional",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "5",
+      "text": "Tajriba-sinov natijalarini baholash va aniqlangan kamchiliklar bo'yicha takliflar kiritish",
+      "executor": "Loyiha guruhi",
+      "co_executors": [],
+      "deadline_raw": "01.11.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-11-01",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    },
+    {
+      "n": "6",
+      "text": "Bajarilgan ishlar holati to'g'risida qisqacha ma'lumot taqdim etish",
+      "executor": "Loyiha koordinatori",
+      "co_executors": [],
+      "deadline_raw": "har haftaning juma kuni",
+      "deadline_type": "periodic",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "table"
+    }
+  ]
+}

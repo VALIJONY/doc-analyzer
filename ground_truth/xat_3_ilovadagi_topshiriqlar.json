@@ -1,0 +1,114 @@
+{
+  "file": "xat_3_ilovadagi_topshiriqlar.pdf",
+  "doc_type": "xat",
+  "requisites": {
+    "sender": "MA'LUMOTLAR XAVFSIZLIGI VA INTEGRATSIYA AGENTLIGI",
+    "number": "07-04/2219",
+    "date": "2026-09-15",
+    "date_raw": "15.09.2026",
+    "signer_position": "Direktor",
+    "signer_name": "D. Ergasheva",
+    "recipient": "Adliya organlari va muassasalarida axborot texnologiyalarini rivojlantirish markaziga",
+    "prepared_by": "B. Hamidov"
+  },
+  "tasks": [
+    {
+      "n": null,
+      "text": "Ilovada ko'rsatilgan topshiriqlarning o'z vaqtida va sifatli bajarilishini ta'minlash hamda ijro holati to'g'risida har oyning 25-sanasiga qadar Agentlikka axborot kiritib borishingizni so'raymiz.",
+      "executor": "Markaz",
+      "co_executors": [],
+      "deadline_raw": "har oyning 25-sanasiga qadar",
+      "deadline_type": "periodic",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "paragraph"
+    },
+    {
+      "n": "1",
+      "text": "Ichki axborot tizimlarida sun'iy intellekt qo'llash mumkin bo'lgan jarayonlarni aniqlash",
+      "executor": "Tizim tahlili bo'limi",
+      "co_executors": [],
+      "deadline_raw": "20.09.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-09-20",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "2",
+      "text": "Tanlangan jarayonlar uchun zarur ma'lumotlar manbalarini inventarizatsiya qilish",
+      "executor": "Ma'lumotlar bazalarini boshqarish bo'limi",
+      "co_executors": [],
+      "deadline_raw": "30.09.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-09-30",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "3",
+      "text": "Topshiriqlarni avtomatik aniqlash va atributlarini ajratish modulining tajriba-sinov variantini ishlab chiqish",
+      "executor": "Sun'iy intellekt laboratoriyasi",
+      "co_executors": [
+        "Dasturiy ta'minotni ishlab chiqish bo'limi"
+      ],
+      "deadline_raw": "2026-yil 15-oktabr",
+      "deadline_type": "date",
+      "deadline_date": "2026-10-15",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "4",
+      "text": "Taqsimlash modulida foydalaniladigan tarkibiy bo'linmalar vakolatlari bazasini shakllantirish",
+      "executor": "Biznes-tahlil bo'limi",
+      "co_executors": [],
+      "deadline_raw": "25.10.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-10-25",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "5",
+      "text": "Modullarning axborot xavfsizligi talablariga muvofiqligini tekshirish",
+      "executor": "Axborot xavfsizligi bo'limi",
+      "co_executors": [],
+      "deadline_raw": "prototip tayyor bo'lgandan so'ng 10 kun ichida",
+      "deadline_type": "conditional",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "6",
+      "text": "Tajriba-sinov natijalarini tahlil qilib, keyingi joriy etish bosqichi bo'yicha takliflar tayyorlash",
+      "executor": "Loyiha guruhi",
+      "co_executors": [],
+      "deadline_raw": "10.11.2026",
+      "deadline_type": "date",
+      "deadline_date": "2026-11-10",
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    },
+    {
+      "n": "7",
+      "text": "Xodimlarni yangi modullar bilan ishlashga o'qitish",
+      "executor": "Kadrlar bo'limi",
+      "co_executors": [],
+      "deadline_raw": "doimiy",
+      "deadline_type": "permanent",
+      "deadline_date": null,
+      "computed": false,
+      "deadline_source": "explicit",
+      "location": "appendix"
+    }
+  ]
+}
