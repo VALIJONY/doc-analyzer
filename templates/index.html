@@ -5,133 +5,484 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hujjat tahlili</title>
 <style>
-  :root { --bg:#f6f7f9; --card:#fff; --text:#1d2330; --muted:#667085; --line:#e3e6ec; --accent:#1f5eff; --warn:#fff3bf; --warn-line:#e0b400; }
+  :root {
+    --bg: #eef1f5; --surface: #ffffff; --ink: #0f1f3d; --muted: #5b6780; --rule: #d5dbe5; --rule-strong: #aab4c5;
+    --accent: #2a3fa6; --accent-ink: #ffffff; --accent-soft: #e3e8fb;
+    --mark: #ffe27a; --mark-ink: #4d3a00; --error: #b3261e; --error-soft: #fdecea;
+    --shadow: rgba(15, 31, 61, .16);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  :root:not([data-theme="light"]) { color-scheme: light dark; }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c1426; --surface: #131d33; --ink: #e8edf7; --muted: #94a0b8; --rule: #25324d; --rule-strong: #43557a;
+      --accent: #8da2ff; --accent-ink: #0c1426; --accent-soft: #1d2a52;
+      --mark: #6b5600; --mark-ink: #ffeaa3; --error: #ff9b92; --error-soft: #3a1b1a;
+      --shadow: rgba(0, 0, 0, .5);
+    }
+  }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width:1100px; margin:0 auto; padding:24px 16px 64px; }
-  h1 { font-size:22px; margin:0 0 4px; }
-  h2 { font-size:16px; margin:0 0 12px; }
-  .sub { color:var(--muted); margin:0 0 20px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:16px; }
-  form { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-  input[type=file] { flex:1 1 260px; }
-  button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 18px; font:inherit; cursor:pointer; }
-  button:disabled { opacity:.55; cursor:wait; }
-  .error { color:#b42318; margin-top:12px; }
-  dl { display:grid; grid-template-columns:max-content 1fr; gap:6px 16px; margin:0; }
-  dt { color:var(--muted); }
-  dd { margin:0; }
-  .table-wrap { overflow-x:auto; }
-  table { border-collapse:collapse; width:100%; min-width:720px; }
-  th, td { text-align:left; vertical-align:top; padding:8px 10px; border-bottom:1px solid var(--line); }
-  th { color:var(--muted); font-weight:600; font-size:13px; }
-  .low { background:var(--warn); box-shadow:inset 3px 0 0 var(--warn-line); }
-  .low::after { content:" tekshiring"; color:#8a6d00; font-size:12px; }
-  .tag { display:inline-block; font-size:12px; border:1px solid var(--line); border-radius:999px; padding:0 8px; margin-right:4px; color:var(--muted); }
-  .note { color:var(--muted); font-size:13px; }
-  [hidden] { display:none; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--sans); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-bottom: 1px solid var(--rule); background: var(--surface); }
+  .brand { display: flex; align-items: center; gap: 10px; font: 600 19px/1 var(--serif); letter-spacing: .01em; }
+  .brand svg { color: var(--accent); }
+  .privacy { margin-left: auto; display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; }
+
+  .layout { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 40px; max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; align-items: start; }
+  .side { position: sticky; top: 24px; display: grid; gap: 28px; }
+
+  /* Yuklash varag'i: burchagi buklangan qog'oz */
+  .sheet-wrap { filter: drop-shadow(0 1px 1px var(--shadow)) drop-shadow(0 8px 14px rgba(15, 31, 61, .08)); }
+  .sheet { position: relative; display: block; padding: 20px; background: var(--surface); cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%); }
+  .sheet::before { content: ""; position: absolute; top: 0; right: 0; width: 30px; height: 30px;
+    background: linear-gradient(225deg, var(--bg) 50%, var(--rule) 50%); }
+  .sheet input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .sheet:focus-within { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .drop { display: grid; justify-items: start; gap: 6px; min-height: 168px; align-content: center; padding: 22px 20px;
+    border: 1.5px dashed var(--rule-strong); border-radius: 4px; transition: background-color .15s, border-color .15s; }
+  .sheet.dragover .drop { border-color: var(--accent); background: var(--accent-soft); }
+  .drop svg { color: var(--accent); margin-bottom: 6px; }
+  .drop strong { font: 600 17px/1.3 var(--serif); }
+  .drop span { color: var(--muted); font-size: 13.5px; }
+  .drop .file-name { color: var(--ink); font: 600 16px/1.35 var(--serif); overflow-wrap: anywhere; }
+  .progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; overflow: hidden; }
+  .progress::after { content: ""; position: absolute; inset: 0 auto 0 -40%; width: 40%; background: var(--accent); animation: slide 1.1s ease-in-out infinite; }
+  @keyframes slide { to { left: 100%; } }
+
+  .actions { display: grid; gap: 10px; margin-top: 16px; }
+  .primary { appearance: none; border: 0; border-radius: 6px; padding: 12px 18px; background: var(--accent); color: var(--accent-ink);
+    font: 600 15px/1.2 var(--sans); cursor: pointer; }
+  .primary:hover:not(:disabled) { filter: brightness(1.1); }
+  .primary:disabled { background: var(--rule); color: var(--muted); cursor: not-allowed; }
+  .primary[aria-busy="true"] { cursor: progress; }
+  .hint { margin: 0; color: var(--muted); font-size: 13px; }
+  .error { margin-top: 14px; padding: 12px 14px; border-left: 3px solid var(--error); background: var(--error-soft); border-radius: 0 6px 6px 0; }
+  .error strong { display: block; color: var(--error); }
+  .error span { font-size: 14px; }
+
+  /* Rekvizitlar: chiziqli reyestr */
+  .req-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 6px; }
+  h2 { margin: 0; font: 600 20px/1.25 var(--serif); }
+  .tag { display: inline-block; padding: 1px 8px; border: 1px solid var(--rule-strong); border-radius: 999px; color: var(--muted); font-size: 12px; line-height: 1.6; white-space: nowrap; }
+  .tag.accent { border-color: var(--accent); color: var(--accent); }
+  dl.req { margin: 0; }
+  .req div { padding: 9px 0; border-bottom: 1px solid var(--rule); }
+  .req dt { color: var(--muted); font-size: 12.5px; }
+  .req dd { margin: 1px 0 0; font: 500 16.5px/1.4 var(--serif); overflow-wrap: anywhere; }
+  .req .note { font: 12.5px/1.4 var(--sans); color: var(--muted); }
+
+  mark.low { background: var(--mark); color: var(--mark-ink); padding: 0 3px; border-radius: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .flag { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 3px; background: var(--mark); color: var(--mark-ink); font: 600 11.5px/1.7 var(--sans); vertical-align: 1px; }
+
+  .empty { padding: 56px 8px 0; max-width: 520px; }
+  .empty h2 { font-size: 26px; margin-bottom: 12px; }
+  .empty p { margin: 0 0 12px; color: var(--muted); }
+
+  .result-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+  .result-head h2 { font-size: 30px; }
+  .result-head p { margin: 4px 0 0; color: var(--muted); }
+  .ghost { appearance: none; border: 1px solid var(--rule-strong); background: transparent; color: var(--ink); border-radius: 6px; padding: 8px 14px; font: 500 14px/1.2 var(--sans); cursor: pointer; }
+  .ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Muddatlar shkalasi */
+  .timeline-box { margin-bottom: 34px; }
+  .timeline-box h3 { margin: 0 0 14px; font: 600 15px/1.3 var(--sans); }
+  .timeline { position: relative; margin: 0 14px; }
+  .axis { position: absolute; left: 0; right: 0; bottom: 22px; height: 0; border-top: 2px solid var(--rule-strong); }
+  .tick { position: absolute; bottom: 0; transform: translateX(-50%); color: var(--muted); font-size: 12px; white-space: nowrap; }
+  .tick::before { content: ""; position: absolute; left: 50%; bottom: 100%; width: 1px; height: 6px; margin-bottom: 1px; background: var(--rule-strong); }
+  .pin { position: absolute; transform: translateX(-50%); width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%;
+    background: var(--accent); color: var(--accent-ink); font: 600 12px/26px var(--sans); text-align: center; cursor: pointer; }
+  .pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 1px; height: var(--stem); background: var(--rule-strong); }
+  .pin:hover { box-shadow: 0 0 0 4px var(--accent-soft); }
+  .pin.doc { border-radius: 5px; background: var(--ink); color: var(--bg); cursor: default; }
+  .pin.doc:hover { box-shadow: none; }
+  .undated { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+
+  .tools { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .tools h3 { margin: 0; font: 600 15px/1.3 var(--sans); }
+  .check { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13.5px; cursor: pointer; }
+  .check input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; }
+  th { padding: 8px 12px 8px 0; border-bottom: 2px solid var(--ink); color: var(--muted); font: 600 12.5px/1.3 var(--sans); text-align: left; }
+  td { padding: 14px 12px 14px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th:first-child, td:first-child { width: 44px; }
+  td.num { color: var(--muted); font: 600 15px/1.5 var(--serif); font-variant-numeric: tabular-nums; }
+  td.text { max-width: 46ch; }
+  .where { display: block; margin-top: 6px; color: var(--muted); font-size: 12.5px; }
+  .partner { display: block; margin-top: 3px; color: var(--muted); font-size: 13px; }
+  .when { display: block; margin-top: 3px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .muted { color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  table.only-low tr.row:not(.has-low) { display: none; }
+  tr.row.flash td { animation: flash 1.6s ease-out; }
+  @keyframes flash { 0%, 35% { background: var(--accent-soft); } 100% { background: transparent; } }
+
+  @media (max-width: 980px) {
+    .layout { grid-template-columns: 1fr; gap: 28px; padding: 20px 16px 64px; }
+    .side { position: static; }
+    .topbar { padding: 12px 16px; flex-wrap: wrap; }
+    .privacy { margin-left: 0; width: 100%; }
+    .result-head h2 { font-size: 25px; }
+  }
+  @media (max-width: 720px) {
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tr.row { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+    td { padding: 4px 0; border: 0; }
+    td.num { font-size: 13px; }
+    td.text { max-width: none; }
+    td[data-label]::before { content: attr(data-label); display: block; color: var(--muted); font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .progress::after { animation: none; left: 0; width: 100%; opacity: .5; }
+    tr.row.flash td { animation: none; background: var(--accent-soft); }
+    .drop { transition: none; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>Hujjat tahlili</h1>
-  <p class="sub">PDF yuklang: rekvizitlar va topshiriqlar ajratib olinadi. Hujjat serverdan tashqariga yuborilmaydi.</p>
+<header class="topbar">
+  <div class="brand">
+    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <circle cx="13" cy="13" r="11.2"/><circle cx="13" cy="13" r="7.6"/><path d="M9.6 13.2l2.5 2.5 4.4-5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Hujjat tahlili
+  </div>
+  <div class="privacy">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></svg>
+    Hujjat shu serverda qayta ishlanadi va tashqariga yuborilmaydi
+  </div>
+</header>
 
-  <div class="card">
-    <form id="form">
-      <input type="file" id="file" accept="application/pdf" required>
-      <button id="submit" type="submit">Tahlil qilish</button>
+<main class="layout">
+  <aside class="side">
+    <form id="form" novalidate>
+      <div class="sheet-wrap">
+        <label class="sheet" id="sheet">
+          <input type="file" id="file" accept="application/pdf,.pdf">
+          <div class="drop" id="drop-idle">
+            <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3h9l6 6v18H8z" stroke-linejoin="round"/><path d="M17 3v6h6M15.5 22v-7m0 0l-3 3m3-3l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <strong>PDF faylni shu yerga tashlang</strong>
+            <span>yoki kompyuterdan tanlang. Matnli va skan hujjatlar qabul qilinadi.</span>
+          </div>
+          <div class="drop" id="drop-file" hidden>
+            <span class="file-name" id="file-name"></span>
+            <span id="file-size"></span>
+            <span>Boshqa fayl tanlash uchun bosing</span>
+          </div>
+          <div class="progress" id="progress" hidden></div>
+        </label>
+      </div>
+      <div class="actions">
+        <button class="primary" id="submit" type="submit" disabled>Tahlil qilish</button>
+        <p class="hint" id="hint">Skan hujjatni o'qish bir necha soniya oladi.</p>
+      </div>
+      <div class="error" id="error" role="alert" hidden><strong id="error-title"></strong><span id="error-text"></span></div>
     </form>
-    <div id="error" class="error" hidden></div>
-  </div>
 
-  <div id="result" hidden>
-    <div class="card">
-      <h2>Rekvizitlar <span class="tag" id="meta"></span></h2>
-      <dl id="requisites"></dl>
+    <section id="requisites-box" hidden aria-labelledby="req-title">
+      <div class="req-head">
+        <h2 id="req-title">Rekvizitlar</h2>
+        <span class="tag accent" id="doc-type"></span>
+        <span class="tag" id="doc-source"></span>
+      </div>
+      <dl class="req" id="requisites"></dl>
+    </section>
+  </aside>
+
+  <section aria-live="polite">
+    <div class="empty" id="empty">
+      <h2>Natija shu yerda chiqadi</h2>
+      <p>PDF faylni yuklab, «Tahlil qilish» tugmasini bosing. Chapda rekvizitlar, bu yerda topshiriqlar, ijrochilar va muddatlar shkalasi paydo bo'ladi.</p>
+      <p>Sariq belgi o'qish ishonchi past maydonni bildiradi. Uni hujjatning o'zi bilan solishtiring.</p>
     </div>
-    <div class="card">
-      <h2>Topshiriqlar <span class="tag" id="count"></span></h2>
-      <p class="note">Sariq belgi: OCR ishonchi past, qiymatni tekshiring.</p>
-      <div class="table-wrap"><table>
-        <thead><tr><th>№</th><th>Topshiriq</th><th>Ijrochi</th><th>Muddat</th><th>Joyi</th></tr></thead>
+
+    <div id="result" hidden>
+      <div class="result-head">
+        <div>
+          <h2 id="summary"></h2>
+          <p id="summary-note"></p>
+        </div>
+        <button type="button" class="ghost" id="download">JSON yuklab olish</button>
+      </div>
+
+      <div class="timeline-box" id="timeline-box" hidden>
+        <h3>Muddatlar shkalasi</h3>
+        <div class="timeline" id="timeline"></div>
+        <p class="undated" id="undated"></p>
+      </div>
+
+      <div class="tools">
+        <h3>Topshiriqlar</h3>
+        <label class="check"><input type="checkbox" id="only-low"> Faqat tekshirish kerak bo'lganlar</label>
+      </div>
+      <table id="table">
+        <thead><tr><th scope="col">№</th><th scope="col">Topshiriq</th><th scope="col">Ijrochi</th><th scope="col">Muddat</th></tr></thead>
         <tbody id="tasks"></tbody>
-      </table></div>
+      </table>
     </div>
-  </div>
+  </section>
 </main>
 
 <script>
 const LABELS = {
   sender: "Jo'natuvchi", number: "Hujjat raqami", date: "Sana", signer_position: "Imzolagan lavozim",
-  signer_name: "Imzolagan shaxs", recipient: "Qabul qiluvchi", prepared_by: "Tayyorlagan xodim (ijrochi emas)",
+  signer_name: "Imzolagan shaxs", recipient: "Qabul qiluvchi", prepared_by: "Tayyorlagan xodim",
 };
-const TYPES = { date: "sana", relative: "nisbiy", periodic: "davriy", conditional: "shartli", permanent: "doimiy", start: "boshlanish sanasi", none: "yo'q", unknown: "noma'lum" };
-const PLACES = { paragraph: "abzats", table: "jadval", appendix: "ilova" };
+const TYPES = { date: "sana", relative: "nisbiy muddat", periodic: "davriy", conditional: "shartli", permanent: "doimiy", start: "boshlanish sanasi", none: "muddat yo'q", unknown: "noma'lum" };
+const UNDATED_NAMES = { periodic: "davriy", conditional: "shartli", permanent: "doimiy", start: "boshlanish sanasi bilan", relative: "nisbiy", unknown: "noma'lum", none: "muddatsiz" };
+const PLACES = { paragraph: "abzatsda", table: "jadvalda", appendix: "ilovada" };
+const MONTHS = ["yanvar", "fevral", "mart", "aprel", "may", "iyun", "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"];
+const LOW_HINT = "OCR ishonchi past: hujjat bilan solishtiring";
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function el(tag, text, className) {
+const $ = (id) => document.getElementById(id);
+let current = null;
+
+function h(tag, className, ...children) {
   const node = document.createElement(tag);
-  if (text !== undefined) node.textContent = text;
   if (className) node.className = className;
+  node.append(...children);
   return node;
 }
 
+function formatDate(iso) {
+  const [year, month, day] = iso.split("-").map(Number);
+  return `${day}-${MONTHS[month - 1]} ${year}`;
+}
+
+// past ishonchli qiymat sariq markerda va "tekshiring" belgisi bilan chiqadi
+function value(text, isLow) {
+  if (!isLow) return document.createTextNode(text);
+  const mark = h("mark", "low", text);
+  mark.title = LOW_HINT;
+  const frag = document.createDocumentFragment();
+  frag.append(mark, h("span", "flag", "tekshiring"));
+  return frag;
+}
+
+function renderRequisites(data) {
+  const list = $("requisites");
+  list.replaceChildren();
+  const low = data.requisites.low_confidence;
+  for (const [key, label] of Object.entries(LABELS)) {
+    const text = key === "date" ? data.requisites.date && formatDate(data.requisites.date) : data.requisites[key];
+    if (!text) continue;
+    const isLow = low.includes(key) || (key === "date" && low.includes("date_raw"));
+    const dd = h("dd", "", value(text, isLow));
+    if (key === "prepared_by") dd.append(h("div", "note", "Topshiriq ijrochisi emas"));
+    list.append(h("div", "", h("dt", "", label), dd));
+  }
+  $("doc-type").textContent = data.doc_type === "qaror" ? "Qaror" : "Xat";
+  $("doc-source").textContent = data.source === "ocr" ? "Skan, OCR bilan o'qildi" : "Matnli PDF";
+  $("requisites-box").hidden = false;
+}
+
 function deadlineCell(task) {
-  const cell = el("td", task.deadline_raw || "-");
-  if (task.low_fields.includes("deadline")) cell.className = "low";
-  const parts = [TYPES[task.deadline_type] || task.deadline_type];
-  if (task.deadline_date) parts.push(task.deadline_date + (task.computed ? " (hisoblangan)" : ""));
-  if (task.deadline_source === "default_rule") parts.push("standart qoida");
-  cell.append(el("div", parts.join(" · "), "note"));
+  const cell = h("td", "");
+  cell.dataset.label = "Muddat";
+  if (task.deadline_type === "none" && !task.deadline_raw) {
+    cell.append(h("span", "muted", TYPES.none));
+    return cell;
+  }
+  cell.append(value(task.deadline_raw, task.low_fields.includes("deadline")));
+  // oddiy sana matnning o'zida ko'rinib turadi, hisoblangan sanani esa alohida ko'rsatamiz
+  if (task.deadline_date && task.deadline_type !== "date") cell.append(h("span", "when", formatDate(task.deadline_date)));
+  const tags = h("div", "tags");
+  if (task.deadline_type !== "date") tags.append(h("span", "tag", TYPES[task.deadline_type] || task.deadline_type));
+  if (task.computed) tags.append(h("span", "tag", "hujjat sanasidan hisoblangan"));
+  if (task.deadline_source === "default_rule") tags.append(h("span", "tag accent", "standart qoida"));
+  if (tags.children.length) cell.append(tags);
   return cell;
 }
 
-function render(data) {
-  document.getElementById("meta").textContent = `${data.doc_type} · ${data.source === "ocr" ? "skan (OCR)" : "matnli PDF"}`;
-  const dl = document.getElementById("requisites");
-  dl.replaceChildren();
-  for (const [key, label] of Object.entries(LABELS)) {
-    const value = data.requisites[key];
-    if (value === null || value === undefined) continue;
-    dl.append(el("dt", label));
-    dl.append(el("dd", value, data.requisites.low_confidence.includes(key) ? "low" : ""));
-  }
-  const body = document.getElementById("tasks");
+function renderTasks(data) {
+  const body = $("tasks");
   body.replaceChildren();
-  for (const task of data.tasks) {
-    const row = el("tr");
-    row.append(el("td", task.n || "-"));
-    row.append(el("td", task.text, task.low_fields.includes("text") ? "low" : ""));
-    const executor = el("td", task.executor || "-", task.low_fields.includes("executor") ? "low" : "");
-    for (const co of task.co_executors) executor.append(el("div", "bilan birgalikda: " + co, "note"));
-    row.append(executor, deadlineCell(task), el("td", PLACES[task.location]));
+  data.tasks.forEach((task, i) => {
+    const row = h("tr", "row" + (task.low_confidence ? " has-low" : ""));
+    row.dataset.i = i;
+    const text = h("td", "text", value(task.text, task.low_fields.includes("text")), h("span", "where", PLACES[task.location]));
+    text.dataset.label = "Topshiriq";
+    const executor = h("td", "", task.executor ? value(task.executor, task.low_fields.includes("executor")) : h("span", "muted", "ko'rsatilmagan"));
+    executor.dataset.label = "Ijrochi";
+    for (const partner of task.co_executors) executor.append(h("span", "partner", "birgalikda: " + partner));
+    row.append(h("td", "num", task.n || "–"), text, executor, deadlineCell(task));
     body.append(row);
-  }
-  document.getElementById("count").textContent = data.tasks.length;
-  document.getElementById("result").hidden = false;
+  });
 }
 
-document.getElementById("form").addEventListener("submit", async (event) => {
+function summarize(data) {
+  const total = data.tasks.length;
+  const dated = data.tasks.filter((t) => t.deadline_date).length;
+  const lowTasks = data.tasks.filter((t) => t.low_confidence).length;
+  const lowRequisites = data.requisites.low_confidence.length;
+  $("summary").textContent = total ? `${total} ta topshiriq topildi` : "Topshiriq topilmadi";
+  const notes = [];
+  if (total) notes.push(`${dated} tasida aniq sana bor.`);
+  if (lowTasks + lowRequisites) notes.push(`${lowTasks} ta topshiriq va ${lowRequisites} ta rekvizitni tekshiring.`);
+  else if (data.source === "ocr") notes.push("O'qish ishonchi yuqori, tekshiriladigan maydon yo'q.");
+  if (!total) notes.push("Hujjatda topshiriq bandlari yo'q yoki format tanilmadi. Rekvizitlarni chapdan tekshiring.");
+  $("summary-note").textContent = notes.join(" ");
+}
+
+function renderTimeline(data) {
+  const points = data.tasks.map((t, i) => ({ label: t.n || "–", date: t.deadline_date, i, task: t })).filter((p) => p.date);
+  $("timeline-box").hidden = !points.length;
+  const counts = {};
+  data.tasks.filter((t) => !t.deadline_date).forEach((t) => { counts[t.deadline_type] = (counts[t.deadline_type] || 0) + 1; });
+  $("undated").textContent = Object.keys(counts).length
+    ? "Sanasiz: " + Object.entries(counts).map(([type, n]) => `${n} ta ${UNDATED_NAMES[type] || type}`).join(", ") + "."
+    : "";
+  if (!points.length) return;
+
+  if (data.requisites.date) points.push({ label: "H", date: data.requisites.date, doc: true });
+  const times = points.map((p) => Date.parse(p.date));
+  let min = Math.min(...times), max = Math.max(...times);
+  if (min === max) { min -= 15 * 864e5; max += 15 * 864e5; }
+  const place = (time) => 3 + ((time - min) / (max - min)) * 94;
+
+  const lanes = [];  // har qatorda oxirgi belgining o'rni: ustma-ust tushmasligi uchun
+  points.sort((a, b) => Date.parse(a.date) - Date.parse(b.date)).forEach((p) => {
+    p.pos = place(Date.parse(p.date));
+    p.lane = lanes.findIndex((end) => p.pos - end >= 5);
+    if (p.lane === -1) p.lane = lanes.push(0) - 1;
+    lanes[p.lane] = p.pos;
+  });
+
+  const pitch = 32;
+  const timeline = $("timeline");
+  timeline.replaceChildren();
+  timeline.style.height = `${lanes.length * pitch + 36}px`;
+  timeline.append(h("div", "axis"));
+
+  const months = [];
+  const first = new Date(min);
+  for (let d = new Date(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + 1, 1)); d.getTime() <= max; d.setUTCMonth(d.getUTCMonth() + 1)) months.push(new Date(d));
+  const step = Math.ceil(months.length / 7) || 1;
+  months.filter((_, k) => k % step === 0).forEach((d) => {
+    const tick = h("span", "tick", MONTHS[d.getUTCMonth()] + (d.getUTCMonth() === 0 ? ` ${d.getUTCFullYear()}` : ""));
+    tick.style.left = `${place(d.getTime())}%`;
+    timeline.append(tick);
+  });
+
+  points.forEach((p, order) => {
+    const pin = h(p.doc ? "div" : "button", "pin" + (p.doc ? " doc" : ""), h("span", "", p.label));
+    pin.style.left = `${p.pos}%`;
+    pin.style.top = `${p.lane * pitch}px`;
+    pin.style.setProperty("--stem", `${(lanes.length - 1 - p.lane) * pitch + 8}px`);
+    if (p.doc) {
+      pin.title = `Hujjat sanasi: ${formatDate(p.date)}`;
+      pin.setAttribute("role", "img");
+      pin.setAttribute("aria-label", pin.title);
+    } else {
+      pin.type = "button";
+      pin.title = `${p.label}. ${p.task.deadline_raw}: ${formatDate(p.date)}`;
+      pin.setAttribute("aria-label", `${p.label}-topshiriq, muddat ${formatDate(p.date)}. Jadvaldagi qatorga o'tish`);
+      pin.addEventListener("click", () => jumpToRow(p.i));
+    }
+    if (!reduceMotion) {
+      const base = "translateX(-50%)";
+      pin.animate([{ transform: `${base} scale(0)`, opacity: 0 }, { transform: `${base} scale(1)`, opacity: 1 }],
+        { duration: 380, delay: order * 55, easing: "cubic-bezier(.2,.8,.3,1.2)", fill: "backwards" });
+    }
+    timeline.append(pin);
+  });
+}
+
+function jumpToRow(i) {
+  const row = document.querySelector(`tr.row[data-i="${i}"]`);
+  if (!row.offsetParent) { $("only-low").checked = false; $("table").classList.remove("only-low"); }
+  row.scrollIntoView({ block: "center", behavior: reduceMotion ? "auto" : "smooth" });
+  row.classList.remove("flash");
+  void row.offsetWidth;
+  row.classList.add("flash");
+}
+
+function render(data) {
+  current = data;
+  $("empty").hidden = true;
+  $("result").hidden = false;
+  $("only-low").checked = false;
+  $("table").classList.remove("only-low");
+  renderRequisites(data);
+  summarize(data);
+  renderTimeline(data);
+  renderTasks(data);
+}
+
+function showError(title, text) {
+  $("error-title").textContent = title;
+  $("error-text").textContent = text;
+  $("error").hidden = false;
+}
+
+function chooseFile(file) {
+  $("error").hidden = true;
+  if (!file) return;
+  if (!/\.pdf$/i.test(file.name) && file.type !== "application/pdf") {
+    showError("Fayl qabul qilinmadi", "Faqat PDF fayl yuklash mumkin.");
+    return;
+  }
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  $("file").files = dt.files;
+  $("file-name").textContent = file.name;
+  $("file-size").textContent = file.size > 1048576 ? `${(file.size / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(file.size / 1024))} KB`;
+  $("drop-idle").hidden = true;
+  $("drop-file").hidden = false;
+  $("submit").disabled = false;
+}
+
+$("file").addEventListener("change", (e) => { if (e.target.files[0]) chooseFile(e.target.files[0]); });
+const sheet = $("sheet");
+["dragenter", "dragover"].forEach((name) => sheet.addEventListener(name, (e) => { e.preventDefault(); sheet.classList.add("dragover"); }));
+["dragleave", "drop"].forEach((name) => sheet.addEventListener(name, (e) => { e.preventDefault(); sheet.classList.remove("dragover"); }));
+sheet.addEventListener("drop", (e) => chooseFile(e.dataTransfer.files[0]));
+
+$("only-low").addEventListener("change", (e) => $("table").classList.toggle("only-low", e.target.checked));
+
+$("download").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(current, null, 2)], { type: "application/json" });
+  const link = h("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = current.file.replace(/\.pdf$/i, "") + ".json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+});
+
+$("form").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const button = document.getElementById("submit");
-  const error = document.getElementById("error");
-  error.hidden = true;
+  const file = $("file").files[0];
+  if (!file) return;
+  const button = $("submit");
+  $("error").hidden = true;
   button.disabled = true;
-  button.textContent = "Tahlil qilinmoqda...";
+  button.setAttribute("aria-busy", "true");
+  button.textContent = "Tahlil qilinmoqda";
+  $("progress").hidden = false;
   try {
     const body = new FormData();
-    body.append("file", document.getElementById("file").files[0]);
+    body.append("file", file);
     const response = await fetch("/analyze", { method: "POST", body });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.detail || "Xatolik");
+    if (!response.ok) throw new Error(data.detail || "Server xato qaytardi.");
     render(data);
   } catch (e) {
-    document.getElementById("result").hidden = true;
-    error.textContent = e.message;
-    error.hidden = false;
+    showError("Tahlil bajarilmadi", `${e.message} Boshqa PDF bilan urinib ko'ring yoki faylning buzilmaganini tekshiring.`);
   } finally {
     button.disabled = false;
+    button.removeAttribute("aria-busy");
     button.textContent = "Tahlil qilish";
+    $("progress").hidden = true;
   }
 });
 </script>
