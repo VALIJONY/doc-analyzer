@@ -19,7 +19,7 @@ PDF -> matn qatlami bormi?
 -> {"pages": [{"text", "tables", "words"}]}  -> parse.py (qoidalar) -> JSON
 ```
 
-- **Nega qoidalar, LLM/VLM emas.** Mashina CPU'da, disk kam; qoidalar tez (skan ~1-3 s) va tushuntirib beriladi:
+- **Nega qoidalar, LLM/VLM emas.** Mashina CPU'da, disk kam; qoidalar tez (bir skan taxminan 3 s) va tushuntirib beriladi:
   har maydon qaysi regex/qoidadan chiqqanini ko'rsatish mumkin. LLM sana va raqamni "to'qib chiqarishi" mumkin,
   bu huquqiy hujjatda xavfli. Hujjat tashqariga chiqmaydi.
 - **Nega Tesseract.** Lokal, yengil, `uzb` tili bor, so'z darajasida ishonch bali beradi (UI'dagi "tekshiring"
@@ -28,7 +28,7 @@ PDF -> matn qatlami bormi?
   har biri alohida o'qilgani uchun ustun va qator tuzilishi saqlanadi.
 - **Nega deskew kulrang rasmda.** Burchakni binar rasmdan topib, burishni kulrang rasmda qildim va keyin Otsu
   qo'lladim. Birinchi urinishda binar rasmni burganimda ingichka vertikal chiziqlar uzilib, jadval kataklari
-  topilmadi (kataklar soni 2 ta chiqdi, to'g'ri o'qishda 24 ta).
+  topilmadi (butun sahifa bitta bog'langan soha bo'lib qoldi, to'g'ri o'qishda 24 ta katak chiqadi).
 - OCR faqat `ocr.py` da, shuning uchun dvigatelni almashtirish oson.
 
 ## 3. Tuzoqlar va ularning yechimi
