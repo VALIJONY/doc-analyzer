@@ -16,7 +16,7 @@ import ocr
 import parse
 
 PDF_DIRS = {"matnli": "data/pdfs/matnli", "skaner": "data/pdfs/skaner"}
-MATCH_THRESHOLD = 0.8  # topshiriq matnlari shundan o'xshash bo'lsa, mos hisoblanadi
+MATCH_THRESHOLD = 0.8
 REQUISITE_FIELDS = ["sender", "number", "date", "signer_position", "signer_name"]
 LETTER_ONLY_FIELDS = ["recipient", "prepared_by"]
 
@@ -34,7 +34,6 @@ def full_text(raw: dict) -> str:
 
 
 def analyze_all() -> dict:
-    """Qaytaradi: {"matnli": {asosiy_nom: (raw, natija)}, "skaner": {...}}"""
     os.makedirs("results", exist_ok=True)
     analyzed = {}
     for kind, folder in PDF_DIRS.items():
@@ -49,7 +48,6 @@ def analyze_all() -> dict:
 
 
 def match_tasks(expected: list, got: list):
-    """Matn o'xshashligi bo'yicha ochko'zlik bilan juftlaydi. Qaytaradi: [(kutilgan, chiqqan)]."""
     scores = sorted(((SequenceMatcher(None, normalize(e["text"]), normalize(g["text"])).ratio(), i, j)
                      for i, e in enumerate(expected) for j, g in enumerate(got)), reverse=True)
     used_e, used_g, pairs = set(), set(), []

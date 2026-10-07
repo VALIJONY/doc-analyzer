@@ -35,7 +35,6 @@
   .layout { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 40px; max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; align-items: start; }
   .side { position: sticky; top: 24px; display: grid; gap: 28px; }
 
-  /* Yuklash varag'i: burchagi buklangan qog'oz */
   .sheet-wrap { filter: drop-shadow(0 1px 1px var(--shadow)) drop-shadow(0 8px 14px rgba(15, 31, 61, .08)); }
   .sheet { position: relative; padding: 20px; background: var(--surface); 
     clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%); }
@@ -78,7 +77,6 @@
   .error strong { display: block; color: var(--error); }
   .error span { font-size: 14px; }
 
-  /* Rekvizitlar: chiziqli reyestr */
   .req-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 10px; margin: 0 0 6px; }
   h2 { margin: 0; font: 600 20px/1.25 var(--serif); }
   .tag { display: inline-block; padding: 1px 8px; border: 1px solid var(--rule-strong); border-radius: 999px; color: var(--muted); font-size: 12px; line-height: 1.6; white-space: nowrap; }
@@ -102,7 +100,6 @@
   .ghost { appearance: none; border: 1px solid var(--rule-strong); background: transparent; color: var(--ink); border-radius: 6px; padding: 8px 14px; font: 500 14px/1.2 var(--sans); cursor: pointer; }
   .ghost:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Muddatlar shkalasi */
   .timeline-box { margin-bottom: 34px; }
   .timeline-box h3 { margin: 0 0 14px; font: 600 15px/1.3 var(--sans); }
   .timeline { position: relative; margin: 0 14px; }
@@ -274,7 +271,6 @@ function formatDate(iso) {
   return `${day}-${MONTHS[month - 1]} ${year}`;
 }
 
-// past ishonchli qiymat sariq markerda va "tekshiring" belgisi bilan chiqadi
 function value(text, isLow) {
   if (!isLow) return document.createTextNode(text);
   const mark = h("mark", "low", text);
@@ -365,7 +361,7 @@ function renderTimeline(data) {
   if (min === max) { min -= 15 * 864e5; max += 15 * 864e5; }
   const place = (time) => 3 + ((time - min) / (max - min)) * 94;
 
-  const lanes = [];  // har qatorda oxirgi belgining o'rni: ustma-ust tushmasligi uchun
+  const lanes = [];
   points.sort((a, b) => Date.parse(a.date) - Date.parse(b.date)).forEach((p) => {
     p.pos = place(Date.parse(p.date));
     p.lane = lanes.findIndex((end) => p.pos - end >= 5);
@@ -458,7 +454,6 @@ function chooseFile(file) {
   showPreview(file);
 }
 
-// hujjat sahifalari yuklash joyining o'zida ko'rinadi; rasmni server shu mashinada chizadi
 async function showPreview(file) {
   const preview = $("preview");
   preview.replaceChildren(h("p", "wait", "Hujjat ochilmoqda..."));
@@ -469,7 +464,7 @@ async function showPreview(file) {
     const response = await fetch("/preview", { method: "POST", body });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail);
-    if ($("file").files[0] !== file) return;  // bu orada boshqa fayl tanlangan
+    if ($("file").files[0] !== file) return;
     const pages = (zoomable) => data.pages.map((src, i) => {
       const img = h("img");
       img.src = src;

@@ -1,8 +1,4 @@
-"""PDF -> {"source", "pages": [{"text", "tables", "words"}]}.
 
-Matn qatlami bo'lsa PyMuPDF, bo'lmasa OpenCV + Tesseract. Boshqa OCR dvigatelga
-almashtirish uchun faqat shu fayl o'zgaradi.
-"""
 import re
 
 import cv2
@@ -10,7 +6,7 @@ import numpy as np
 import pymupdf
 import pytesseract
 
-MIN_TEXT_CHARS = 50  # shundan kam bo'lsa sahifa skan hisoblanadi
+MIN_TEXT_CHARS = 50
 DPI = 300
 LANG = "uzb+eng" if "uzb" in pytesseract.get_languages() else "eng"
 
@@ -54,7 +50,7 @@ def read_text_page(page) -> dict:
 def read_scan_page(page) -> dict:
     pix = page.get_pixmap(dpi=DPI, colorspace=pymupdf.csGRAY)
     gray = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width)
-    gray = deskew(cv2.medianBlur(gray, 3))  # median nuqtali shovqinni yo'qotadi
+    gray = deskew(cv2.medianBlur(gray, 3))
     _, bw = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
     words = []
@@ -69,7 +65,6 @@ def read_scan_page(page) -> dict:
                 words += cell_words
             tables.append(cells)
         tables = [tables]
-        # jadvaldan tashqari qismni alohida o'qiymiz
         x0 = min(c[0] for r in rows for c in r)
         y0 = min(c[1] for r in rows for c in r)
         x1 = max(c[0] + c[2] for r in rows for c in r)
@@ -100,7 +95,6 @@ def deskew(gray):
 
 
 def find_table_cells(bw):
-    """Jadval chiziqlaridan kataklar topadi. Qaytaradi: qatorlar ro'yxati, har qator [(x, y, w, h), ...]."""
     ink = 255 - bw
     h, w = ink.shape
     horizontal = cv2.morphologyEx(ink, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT, (w // 25, 1)))
@@ -117,7 +111,7 @@ def find_table_cells(bw):
 
     rows = []
     for cell in cells:
-        if rows and abs(cell[1] - rows[-1][0][1]) < 15:  # bir xil y = bir qator
+        if rows and abs(cell[1] - rows[-1][0][1]) < 15:
             rows[-1].append(cell)
         else:
             rows.append([cell])

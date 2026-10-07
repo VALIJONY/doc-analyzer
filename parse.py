@@ -4,7 +4,7 @@ import os
 import re
 from datetime import date, timedelta
 
-CONF_THRESHOLD = 70  # undan past ishonchli so'zli maydon "tekshiring" deb belgilanadi
+CONF_THRESHOLD = 70
 
 MONTHS = {m: i for i, m in enumerate(
     "yanvar fevral mart aprel may iyun iyul avgust sentabr oktabr noyabr dekabr".split(), 1)}
@@ -13,7 +13,6 @@ NUMBER_WORDS = {"bir": 1, "ikki": 2, "uch": 3, "to'rt": 4, "besh": 5, "olti": 6,
                 "sakkiz": 8, "to'qqiz": 9, "o'n": 10, "yigirma": 20, "o'ttiz": 30}
 NUMBER_RE = r"(?:\d+|" + "|".join(NUMBER_WORDS) + ")"
 
-# Tashkiliy birlik so'zlari: ijrochi shu so'zgacha bo'lgan ot birikmasi
 UNIT_WORDS = {"boshqarmasi", "departamenti", "bo'limi", "bo'linmasi", "bo'linmalar", "laboratoriyasi",
               "kotibiyati", "xizmati", "guruhi", "koordinatori", "markaz"}
 
@@ -32,7 +31,6 @@ ILOVA_RE = re.compile(r"\b[IT]LOVA\b")                                        # 
 ITEM_RE = re.compile(r"^(\d{1,2})\.\s+(.*)")                                  # "3. Axborot ... tayyorlasin."
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.:!])\s+")
 COMMAND_RE = re.compile(r"(?:sin|sinlar|so'raymiz|so'raladi)\.?$")             # "... taqdim etsin."
-# Topshiriq emas: nazorat, tasdiqlash, umumiy chaqiriq, jadvalga kirish, standart muddat qoidasi
 NOT_A_TASK_RE = re.compile(
     r"nazorat qilish|tasdiqlansin|ijro etilishi ta'minlansin|quyidagi|muddati alohida ko'rsatilmagan|:$", re.I)
 DEFAULT_RULE_RE = re.compile(r"muddati alohida ko'rsatilmagan topshiriqlar (.+?) ijro etilsin")
@@ -71,7 +69,7 @@ def add_relative(raw: str, start: date):
         month = start.month - 1 + n
         year, month = start.year + month // 12, month % 12 + 1
         return date(year, month, min(start.day, calendar.monthrange(year, month)[1]))
-    if unit == "ish kuni":  # bayramlar hisobga olinmaydi
+    if unit == "ish kuni":
         result = start
         while n:
             result += timedelta(days=1)
@@ -106,7 +104,6 @@ def find_executors(sentence: str):
 
 
 def split_items(lines: list[str]):
-    """Raqamli bandlarni [raqam, matn] ko'rinishida va band oldidagi matnni qaytaradi."""
     preamble, items = [], []
     for line in lines:
         m = ITEM_RE.match(line)
@@ -150,7 +147,6 @@ def parse_requisites(lines: list[str], text: str, doc_type: str) -> dict:
         for i, line in enumerate(lines):
             if m := LETTER_NUMBER_RE.search(line):
                 req["date_raw"], req["date"], req["number"] = m[1], to_date(m[1]), m[2]
-                # qabul qiluvchi shu qatorning o'ngida va keyingi qatorlarda, "...ga" bilan tugaydi
                 rest = XATGA_RE.sub(" ", " ".join([line[m.end():]] + lines[i + 1:i + 6])).split()
                 end = next((j for j, w in enumerate(rest) if w.endswith("ga")), None)
                 req["recipient"] = " ".join(rest[:end + 1]) if end is not None else None
@@ -165,7 +161,6 @@ def parse_requisites(lines: list[str], text: str, doc_type: str) -> dict:
 
 
 def low_fields(fields: dict, word_conf: dict) -> list[str]:
-    """Qiymatidagi so'zlardan birortasi ishonchi past bo'lsa, maydon nomini qaytaradi."""
     low = []
     for name, value in fields.items():
         confs = [word_conf[w] for w in clean_words(value or "") if w in word_conf]
@@ -217,7 +212,7 @@ def parse_document(doc: dict, path: str) -> dict:
     sentences = [(None, s) for s in SENTENCE_SPLIT_RE.split(preamble)]
     for n, item in items:
         first, *rest = SENTENCE_SPLIT_RE.split(item)
-        sentences += [(n, first)] + [(None, s) for s in rest]  # band ichidagi qo'shimcha gaplar raqamsiz topshiriq
+        sentences += [(n, first)] + [(None, s) for s in rest]
 
     default_deadline = None
     tasks = []
@@ -228,17 +223,17 @@ def parse_document(doc: dict, path: str) -> dict:
             continue
         executor, co_executors = find_executors(sentence)
         if executor is None and doc_type == "xat":
-            executor = recipient_short  # ijrochi yozilmagan: xat qabul qiluvchiga
+            executor = recipient_short
         tasks.append(make_task(n, sentence, executor, co_executors, find_deadline(sentence, doc_date),
                                "paragraph", word_conf))
 
     for page in pages:
         location = "appendix" if ILOVA_RE.search(page["text"]) else "table"
         for table in page["tables"]:
-            for i, row in enumerate(table[1:], 1):  # birinchi qator sarlavha
+            for i, row in enumerate(table[1:], 1):
                 if len(row) < 3:
                     continue
-                executors = [e.strip() for e in row[2].split(",")]  # "A, B": ikkalasi ijrochi
+                executors = [e.strip() for e in row[2].split(",")]
                 deadline = find_deadline(row[-1], doc_date)
                 deadline["raw"] = row[-1]
                 if deadline["type"] == "none" and row[-1]:
