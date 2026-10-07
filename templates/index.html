@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hujjat tahlili</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --text:#1d2330; --muted:#667085; --line:#e3e6ec; --accent:#1f5eff; --warn:#fff3bf; --warn-line:#e0b400; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width:1100px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:16px; margin:0 0 12px; }
+  .sub { color:var(--muted); margin:0 0 20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:16px; }
+  form { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  input[type=file] { flex:1 1 260px; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:10px 18px; font:inherit; cursor:pointer; }
+  button:disabled { opacity:.55; cursor:wait; }
+  .error { color:#b42318; margin-top:12px; }
+  dl { display:grid; grid-template-columns:max-content 1fr; gap:6px 16px; margin:0; }
+  dt { color:var(--muted); }
+  dd { margin:0; }
+  .table-wrap { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; min-width:720px; }
+  th, td { text-align:left; vertical-align:top; padding:8px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-weight:600; font-size:13px; }
+  .low { background:var(--warn); box-shadow:inset 3px 0 0 var(--warn-line); }
+  .low::after { content:" tekshiring"; color:#8a6d00; font-size:12px; }
+  .tag { display:inline-block; font-size:12px; border:1px solid var(--line); border-radius:999px; padding:0 8px; margin-right:4px; color:var(--muted); }
+  .note { color:var(--muted); font-size:13px; }
+  [hidden] { display:none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Hujjat tahlili</h1>
+  <p class="sub">PDF yuklang: rekvizitlar va topshiriqlar ajratib olinadi. Hujjat serverdan tashqariga yuborilmaydi.</p>
+
+  <div class="card">
+    <form id="form">
+      <input type="file" id="file" accept="application/pdf" required>
+      <button id="submit" type="submit">Tahlil qilish</button>
+    </form>
+    <div id="error" class="error" hidden></div>
+  </div>
+
+  <div id="result" hidden>
+    <div class="card">
+      <h2>Rekvizitlar <span class="tag" id="meta"></span></h2>
+      <dl id="requisites"></dl>
+    </div>
+    <div class="card">
+      <h2>Topshiriqlar <span class="tag" id="count"></span></h2>
+      <p class="note">Sariq belgi: OCR ishonchi past, qiymatni tekshiring.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>№</th><th>Topshiriq</th><th>Ijrochi</th><th>Muddat</th><th>Joyi</th></tr></thead>
+        <tbody id="tasks"></tbody>
+      </table></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const LABELS = {
+  sender: "Jo'natuvchi", number: "Hujjat raqami", date: "Sana", signer_position: "Imzolagan lavozim",
+  signer_name: "Imzolagan shaxs", recipient: "Qabul qiluvchi", prepared_by: "Tayyorlagan xodim (ijrochi emas)",
+};
+const TYPES = { date: "sana", relative: "nisbiy", periodic: "davriy", conditional: "shartli", permanent: "doimiy", start: "boshlanish sanasi", none: "yo'q", unknown: "noma'lum" };
+const PLACES = { paragraph: "abzats", table: "jadval", appendix: "ilova" };
+
+function el(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+function deadlineCell(task) {
+  const cell = el("td", task.deadline_raw || "-");
+  if (task.low_fields.includes("deadline")) cell.className = "low";
+  const parts = [TYPES[task.deadline_type] || task.deadline_type];
+  if (task.deadline_date) parts.push(task.deadline_date + (task.computed ? " (hisoblangan)" : ""));
+  if (task.deadline_source === "default_rule") parts.push("standart qoida");
+  cell.append(el("div", parts.join(" · "), "note"));
+  return cell;
+}
+
+function render(data) {
+  document.getElementById("meta").textContent = `${data.doc_type} · ${data.source === "ocr" ? "skan (OCR)" : "matnli PDF"}`;
+  const dl = document.getElementById("requisites");
+  dl.replaceChildren();
+  for (const [key, label] of Object.entries(LABELS)) {
+    const value = data.requisites[key];
+    if (value === null || value === undefined) continue;
+    dl.append(el("dt", label));
+    dl.append(el("dd", value, data.requisites.low_confidence.includes(key) ? "low" : ""));
+  }
+  const body = document.getElementById("tasks");
+  body.replaceChildren();
+  for (const task of data.tasks) {
+    const row = el("tr");
+    row.append(el("td", task.n || "-"));
+    row.append(el("td", task.text, task.low_fields.includes("text") ? "low" : ""));
+    const executor = el("td", task.executor || "-", task.low_fields.includes("executor") ? "low" : "");
+    for (const co of task.co_executors) executor.append(el("div", "bilan birgalikda: " + co, "note"));
+    row.append(executor, deadlineCell(task), el("td", PLACES[task.location]));
+    body.append(row);
+  }
+  document.getElementById("count").textContent = data.tasks.length;
+  document.getElementById("result").hidden = false;
+}
+
+document.getElementById("form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = document.getElementById("submit");
+  const error = document.getElementById("error");
+  error.hidden = true;
+  button.disabled = true;
+  button.textContent = "Tahlil qilinmoqda...";
+  try {
+    const body = new FormData();
+    body.append("file", document.getElementById("file").files[0]);
+    const response = await fetch("/analyze", { method: "POST", body });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Xatolik");
+    render(data);
+  } catch (e) {
+    document.getElementById("result").hidden = true;
+    error.textContent = e.message;
+    error.hidden = false;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Tahlil qilish";
+  }
+});
+</script>
+</body>
+</html>
